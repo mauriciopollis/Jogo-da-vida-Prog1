@@ -1,5 +1,50 @@
-# Definição da função que evolui cada célula da população de acordo com as regras do jogo.
-def evolucao(vizinhanca, celula):
+from curses.ascii import isdigit
+import os
+
+
+def imprime_arquivos_existentes():
+    arquivos = os.listdir("Arquivos_Exemplo")
+    print("Os arquivos exemplo existentes são:")
+    for arquivo in arquivos:
+        print(arquivo)
+
+
+def retorna_arquivo_exemplo():
+    arquivo_exemplo = input("Escolha um dos arquivos existentes: ")
+    if arquivo_exemplo not in os.listdir("Arquivos_Exemplo"):
+        print("Arquivo inválido.")
+        retorna_arquivo_exemplo()
+    else:
+        print(f'O arquivo {arquivo_exemplo} foi selecionado.')
+        return arquivo_exemplo
+
+
+def retorna_num_iteracoes():
+    num_iteracoes = input("Insira o número de iterações: ")
+    if num_iteracoes.isdigit():
+        if int(num_iteracoes) >= 0:
+            print(f'Serão feitas {num_iteracoes} iterações.')
+            return num_iteracoes
+        else:
+            print("O número de iterações deve ser um inteiro não negativo.")
+            retorna_num_iteracoes()
+    else:
+        print("O número de iterações deve ser um inteiro não negativo.")
+        retorna_num_iteracoes()
+
+
+def retorna_populacao_inicial(arquivo):
+    matriz = []
+    with open('Arquivos_Exemplo' + '\\' + arquivo, 'r') as f:
+        linhas = f.readlines()
+        for linha in linhas:
+            linha = linha.strip('\n')
+            linha = linha.split()
+            matriz.append(linha)
+    return matriz
+
+
+def regras_evolucao(vizinhanca, celula):
     if celula == 'M':
         if vizinhanca.count('V') == 3:
             celula = 'V'
@@ -15,6 +60,37 @@ def evolucao(vizinhanca, celula):
     return celula
 
 
+def retorna_vizinhos(celula): # irá retornar uma lista com os vizinhos de uma dada célula
+    pass
+
+
+def jogo_da_vida(populacao_inicial, num_iteracoes):
+    pass # irá retornar uma matriz com a população ao final do jogo
+
+
+def escreve_populacao_em_arquivo(populacao_final):
+    with open('resultado.txt', 'w') as f:
+        for linha in populacao_final:
+            f.write(" ".join(linha) + '\n')
+
+
+def main():
+    while True:
+        imprime_arquivos_existentes()
+        arquivo_exemplo = retorna_arquivo_exemplo()
+        num_iteracoes = retorna_num_iteracoes()
+        populacao_inicial = retorna_populacao_inicial(arquivo_exemplo)
+        populacao_final = jogo_da_vida(populacao_inicial, num_iteracoes)
+        escreve_populacao_em_arquivo(populacao_final)
+        print("O resultado do jogo foi escrito no arquivo resultado.txt")
+        continua = input("Deseja recomeçar o jogo? [SIM - qualquer tecla; Não - N]").upper()
+        if continua == 'N':
+            break
+
+
+main()
+
+"""
 # Cria a matriz que representa a situação da população ao início de cada rodada.
 inicio_da_rodada = []
 
@@ -198,3 +274,4 @@ for linha in final_da_rodada:
 
 # Fecha o arquivo final.txt
 f2.close()
+"""
