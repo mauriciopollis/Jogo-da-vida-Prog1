@@ -60,8 +60,34 @@ def regras_evolucao(celula, vizinhanca):
     return celula
 
 
-def retorna_vizinhos(celula, matriz): # irá retornar uma lista com os vizinhos de uma dada célula
-    pass
+def retorna_vizinhos(indice_linha, indice_coluna, matriz):
+    vizinhos = []
+    # achar vizinhos da linha de cima
+    for j in range(indice_coluna - 1, indice_coluna + 2):
+        try:
+            if (indice_linha - 1) >= 0:
+                if j >= 0:
+                    vizinhos.append(matriz[indice_linha - 1][j])
+        except IndexError:
+            pass
+
+    # achar vizinhos da mesma linha
+    for j in range(indice_coluna - 1, indice_coluna + 2, 2):
+        try:
+            if j >= 0:
+                vizinhos.append(matriz[indice_linha][j])
+        except IndexError:
+            pass
+
+    # achar vizinhos da linha de baixo
+    for j in range(indice_coluna - 1, indice_coluna + 2):
+        try:
+            if j >= 0:
+                vizinhos.append(matriz[indice_linha + 1][j])
+        except IndexError:
+            pass
+
+    return vizinhos
 
 
 def evolui_uma_iteracao(populacao_inicial):
@@ -71,7 +97,7 @@ def evolui_uma_iteracao(populacao_inicial):
     num_colunas = len(populacao_inicial[0])
     for i in range(num_linhas):
         for j in range(num_colunas):
-            vizinhos = retorna_vizinhos(final[i][j], inicio)
+            vizinhos = retorna_vizinhos(i, j, inicio)
             final[i][j] = regras_evolucao(final[i][j], vizinhos)
     return final
 
