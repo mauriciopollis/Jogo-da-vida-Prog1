@@ -44,7 +44,7 @@ def retorna_populacao_inicial(arquivo):
     return matriz
 
 
-def regras_evolucao(vizinhanca, celula):
+def regras_evolucao(celula, vizinhanca):
     if celula == 'M':
         if vizinhanca.count('V') == 3:
             celula = 'V'
@@ -60,12 +60,20 @@ def regras_evolucao(vizinhanca, celula):
     return celula
 
 
-def retorna_vizinhos(celula): # irá retornar uma lista com os vizinhos de uma dada célula
+def retorna_vizinhos(celula, matriz): # irá retornar uma lista com os vizinhos de uma dada célula
     pass
 
 
-def jogo_da_vida(populacao_inicial, num_iteracoes):
-    pass # irá retornar uma matriz com a população ao final do jogo
+def evolui_uma_iteracao(populacao_inicial):
+    inicio = populacao_inicial
+    final = populacao_inicial.copy()
+    num_linhas = len(populacao_inicial)
+    num_colunas = len(populacao_inicial[0])
+    for i in range(num_linhas):
+        for j in range(num_colunas):
+            vizinhos = retorna_vizinhos(final[i][j], inicio)
+            final[i][j] = regras_evolucao(final[i][j], vizinhos)
+    return final
 
 
 def escreve_populacao_em_arquivo(populacao_final):
@@ -79,9 +87,10 @@ def main():
         imprime_arquivos_existentes()
         arquivo_exemplo = retorna_arquivo_exemplo()
         num_iteracoes = retorna_num_iteracoes()
-        populacao_inicial = retorna_populacao_inicial(arquivo_exemplo)
-        populacao_final = jogo_da_vida(populacao_inicial, num_iteracoes)
-        escreve_populacao_em_arquivo(populacao_final)
+        populacao = retorna_populacao_inicial(arquivo_exemplo)
+        for _ in range(num_iteracoes):
+            populacao = evolui_uma_iteracao(populacao)
+        escreve_populacao_em_arquivo(populacao)
         print("O resultado do jogo foi escrito no arquivo resultado.txt")
         continua = input("Deseja recomeçar o jogo? [SIM - qualquer tecla; Não - N]").upper()
         if continua == 'N':
